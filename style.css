@@ -167,6 +167,7 @@ section {
 }
 
 .pixel-cat-gif {
+    align-items: center;
     display: block;
     margin: 1rem auto;
     width: 350px;
