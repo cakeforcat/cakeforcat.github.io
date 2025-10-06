@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>cakeforcat | Lovelace Day</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/png" href="/favicon/favicon-96x96.png" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="/favicon/favicon.svg" />
+    <link rel="shortcut icon" href="/favicon/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png" />
+    <link rel="manifest" href="/favicon/site.webmanifest" />
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <h1>cakeforcat</h1>
+            <nav>
+                <a href="index.html" class="pixel-button">Home</a>
+                <a href="blog.html" class="pixel-button">Blog</a>
+                <a href="contact.html" class="pixel-button">Contact</a>
+                <a href="lovelace2025.html" class="pixel-button secret">Lovelace Day</a>
+            </nav>
+        </header>
+
+        <main>
+            <section>
+                <h2 class="section-title">Ada Lovelace Day 2025!</h2>
+                <p>
+                    Hello, welcome to my personal website. You have reached (I hope intentionally) a secret page dedicated to Ada Lovelace Day 2025.
+                    This is a collection of some resources you might need for the workshop. Good luck and have fun!
+                </p>
+
+                <pre class="source-code">
+// give your led pin a name:
+int led = 13;
+
+// the setup routine runs once when you press reset:
+void setup() {                
+  // initialize the digital pin as an output.
+  pinMode(led, OUTPUT);     
+}
+
+// the loop routine runs over and over again forever:
+void loop() {
+  digitalWrite(led, HIGH);   // turn the LED on (HIGH is the voltage level)
+  delay(1000);               // wait for a second
+  digitalWrite(led, LOW);    // turn the LED off by making the voltage LOW
+  delay(2000);               // wait for a second
+}
+                </pre>
+
+                <h2 class="section-title">Elegoo car</h2>
+                <p>
+                    <a href="https://play.google.com/store/apps/details?id=air.com.elegoo.elegooTool&hl=en" class="pixel-button">Download the Android Elegoo app</a>
+                    <a href="https://apps.apple.com/us/app/elegookit/id1441940983" class="pixel-button">Download the iOS Elegoo app</a>
+                </p>
+            </section>
+        </main>
+        <footer>
+            &copy; 2025 cakeforcat | All rights reserved.
+        </footer>
+    </div>
+
+</body>
+</html>
+
