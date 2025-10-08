@@ -59,6 +59,69 @@ void loop() {
                     <a href="https://play.google.com/store/apps/details?id=air.com.elegoo.elegooTool&hl=en" class="pixel-button">Download the Android Elegoo app</a>
                     <a href="https://apps.apple.com/us/app/elegookit/id1441940983" class="pixel-button">Download the iOS Elegoo app</a>
                 </p>
+
+                <h2 class="section-title">LED strip and light sensor</h2>
+                <p>
+                    Here is a slightly more advanced challange if you want to try it out. We have a light sensor and an strip of 10 LEDs.
+                    These are smart LEDs and you can change their color and brightness individually. You need a special library called "Adafruit NeoPixel" to control them.
+                    Feel free to ask for some help getting it installed.
+                </p>
+                <p>
+                    Here's and example code that will initialize the strip and play an animation on it.
+                    <pre class="source-code">
+#include &lt;Adafruit_NeoPixel.h&gt;
+#ifdef __AVR__
+  #include &lt;avr/power.h&gt;
+#endif
+#define PIN        6
+#define NUMPIXELS 16
+
+Adafruit_NeoPixel pixels(NUMPIXELS, PIN, NEO_GRB + NEO_KHZ800);
+#define DELAYVAL 500
+
+void setup() {
+#if defined(__AVR_ATtiny85__) && (F_CPU == 16000000)
+  clock_prescale_set(clock_div_1);
+#endif
+
+  pixels.begin();
+}
+
+void loop() {
+  pixels.clear();
+
+  for(int i=0; i&lt;NUMPIXELS; i++) {
+
+    pixels.setPixelColor(i, pixels.Color(0, 150, 0));
+    pixels.show();
+    delay(DELAYVAL);
+  }
+}
+                    </pre>
+                </p>
+                <p>
+                    Ok, here's the challange! We have a few different sensors that will sense something in the room and convert that to a signal the Arduino can understand.
+                    One of them is a simple light sensor that will give a higher value when there's more light in the room.
+                </p>
+                <p>
+                    There's a solution at the end but here are some useful code snippets to get you started:
+                </p>
+                <pre class="source-code">
+// Read the raw analog value from pin A0 (will be 0-1023)
+int sensorValue = analogRead(A0);
+
+// Map the sensor value (0-1023) to a brightness value (0-255)
+int brightness = map(sensorValue, 0, 1023, 0, 255);
+
+// Set the brightness of all pixels in the strip
+for(int i=0; i&lt;NUMPIXELS; i++) {
+  pixels.setPixelColor(i, pixels.Color(brightness, brightness, brightness));
+}
+pixels.show();
+                </pre>
+                <p>
+                    <a href="lovelace2025-solution.html" class="pixel-button">Solution :D</a>
+                </p>
             </section>
         </main>
         <footer>

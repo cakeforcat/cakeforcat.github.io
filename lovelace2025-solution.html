@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>cakeforcat | Lovelace Day</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/png" href="/favicon/favicon-96x96.png" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="/favicon/favicon.svg" />
+    <link rel="shortcut icon" href="/favicon/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png" />
+    <link rel="manifest" href="/favicon/site.webmanifest" />
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <h1>cakeforcat</h1>
+            <nav>
+                <a href="index.html" class="pixel-button">Home</a>
+                <a href="blog.html" class="pixel-button">Blog</a>
+                <a href="contact.html" class="pixel-button">Contact</a>
+                <a href="lovelace2025.html" class="pixel-button">Lovelace Day</a>
+                <a href="lovelace2025-solution.html" class="pixel-button secret">Lovelace Day Solution!</a>
+            </nav>
+        </header>
+
+        <main>
+            <section>
+                <h2 class="section-title">Ada Lovelace Day 2025!</h2>
+                <pre class="source-code">
+#include <Adafruit_NeoPixel.h>
+#ifdef __AVR__
+  #include <avr/power.h>
+#endif
+
+// Define the pin connected to the NeoPixel strip
+#define PIN        10
+// Define the number of pixels in the strip
+#define NUMPIXELS 10
+// Define the analog input pin
+#define ANALOG_PIN A0
+
+// Initialize the NeoPixel library
+Adafruit_NeoPixel pixels(NUMPIXELS, PIN, NEO_GRB + NEO_KHZ800);
+
+void setup() {
+  // This is for Trinket/Gemma/etc.
+#if defined(__AVR_ATtiny85__) && (F_CPU == 16000000)
+  clock_prescale_set(clock_div_1);
+#endif
+
+  pixels.begin(); // Initialize NeoPixel library
+}
+
+void loop() {
+  // Read the raw analog value from pin A0 (will be 0-1023)
+  int sensorValue = analogRead(ANALOG_PIN);
+  
+  // Map the analog value to the number of pixels.
+  // The map() function re-scales the 0-1023 range to our 0-NUMPIXELS range.
+  int ledsToLight = map(sensorValue, 0, 1023, 0, NUMPIXELS);
+
+  pixels.clear(); // Set all pixel data to 'off'
+
+  // This loop lights up the calculated number of LEDs
+  for(int i = 0; i < ledsToLight; i++) {
+    // Set pixel 'i' to a green color.
+    // The Color() function takes Red, Green, Blue values (0-255)
+    pixels.setPixelColor(i, pixels.Color(0, 150, 0));
+  }
+
+  pixels.show(); // Send the updated pixel data to the strip
+  
+  delay(50); // Add a small delay to prevent flickering
+}
+                </pre>
+                
+                    
+            </section>
+        </main>
+        <footer>
+            &copy; 2025 cakeforcat | All rights reserved.
+        </footer>
+    </div>
+
+</body>
+</html>
+
