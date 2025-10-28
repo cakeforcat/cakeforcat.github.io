@@ -192,6 +192,14 @@ section {
     height: auto;
 }
 
+.stallman {
+    align-items: center;
+    display: block;
+    margin: 1rem auto;
+    width: 150px;
+    height: auto;
+}
+
 /* Links section */
 .link-list {
     list-style: none;
