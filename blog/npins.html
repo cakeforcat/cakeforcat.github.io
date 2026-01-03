@@ -28,15 +28,81 @@
         <main>
             <section>
                 <h2 class="section-title">NixOS, channels, flakes and my take on a fully reproducible config</h2>
-
+                <h3>Intro</h3>
                 <p>
                     If you had a chance to stumble upon my NixOS configuration repository on GitHub, 
                     you might have read deep enough to find <a href="https://github.com/cakeforcat/nixos-config/blob/main/holy-mother-of-scripts.fish">holy-mother-of-scripts.fish</a>.
                     
                     Every NixOS user has to write their own deployment script at some point and mine started balooning pretty quickly.
-                    What is unique here is the way that <code>nixos-rebuild</code> is invoked.
+                    What is unique here is the way that <code>nixos-rebuild</code> is invoked and how that ties to the way I "kill" "channels" on my NixOs system
                 </p>
                 <p>
+                </p>
+                <h3>To the point</h3>
+                <p>
+                    So the concept is actually quite simple. Arriving here took a bit of digging and trial and error, as with all nix development, but here I am.
+                </p>
+                <p>
+                    First there's npins. It is a very simple source manager for nix, and usage is quite simple.
+                    It operates similiar to the system channels. You have to perform updates manually, the great thing here is that it support many more input sources and options.
+                    Last very important thing is that each source is saved in <code><a href="https://github.com/cakeforcat/nixos-config/blob/main/npins/sources.json">sources.json</a></code> and thus can be edited and tracked by git, allowing for transparent and clear version pinning and rollbacks.
+                </p>
+                <p>
+                    A nixpkgs channel (Hydra release basiacally, but I'm not gonna get into that right now) can be added as a source and tracked with a single command.
+                    Take a look at the <a href="https://github.com/andir/npins">npins repo</a> to check out all the options.
+                </p>
+                <p>
+                    Once you have an initialized npins folder with a nixpkgs pin there are only 2 components in your config/deployment script that do the magic.
+                    First is this nix code snippet I have saved as <code><a href="https://github.com/cakeforcat/nixos-config/blob/main/pinning.nix">pinning.nix</a></code>
+                    <pre class="source-code">
+{
+  config,
+  pkgs,
+  ...
+}:
+{
+  # kill channels
+  nix = {
+    channel.enable = false;
+    nixPath = [
+      "nixpkgs=/etc/nixos/nixpkgs"
+      "nixos-config=/home/USERNAME/nixos-config/configuration.nix"
+    ];
+  };
+  environment.etc = {
+    "nixos/nixpkgs".source = builtins.storePath pkgs.path;
+  };
+  # command-not-found fix
+  programs.command-not-found.dbPath = "/etc/nixos/nixpkgs/programs.sqlite";
+}</pre>
+                    First off <code>channel.enable = false;</code> disables the nixos channels feature. Then the nixPath is configured to point to some arbitrary 2 locations.
+                    <code>nixpkgs</code> points it to a new location to save the current gen of nixpkgs (our channel essentially) and <code>nixos-config</code> just helps us with not having to deal with /etc/nixos/.
+
+                    Important bit is happening at <code>environment.etc = { "nixos/nixpkgs".source = builtins.storePath pkgs.path; };</code> where the actual source of nixpkgs (store path) gets linked to the location from above.
+
+                    You might ask at this point, ok but where is the store path resultion happening?
+                    This is done every time we run nixos-rebuild using <a href="https://github.com/cakeforcat/nixos-config/blob/main/holy-mother-of-scripts.fish">holy-mother-of-scripts.fish</a>.
+                    Specifically these 2 lines
+                    <pre class="source-code">
+set -l nixpkgs_path (nix-instantiate --json --eval npins/default.nix -A nixpkgs.outPath | jq -r .)
+sudo nixos-rebuild $rebuild_type -I nixos-config=/home/USERNAME/nixos-config/configuration.nix -I nixpkgs=$nixpkgs_path --show-trace 2>&1 | tee rebuild.log</pre>
+
+                    Here, nix-instantiate (modern npins has a built in command for it but I cba) is used to extract the store location of the current nixpkgs as pinned by npins.
+                    Then <code>nixos-rebuild</code> is run with the -I options to force the nixpkgs and config locations. That's it.
+                    The nix config code earlier makes sure the store is linked to our known location meaning everything else that needs it can find it easily.
+                </p>
+                <h3>Extras, sources, acknoledgments, idk everything else</h3>
+                <p>
+                    So this is a result of some diggin around and I think it's important how I actually arrived here. I'm by no means a computer scientist, software engineer or a sysadmin.
+                    I'm a hardware engineer who learned about compiler pre-processors while writing SystemVerilog.
+                    If anyone else is particularily autistic about NixOS the way I am, but struggles with the whole math and nix language behind it, these blog posts are your only source of documentation.
+                    (bless the modern official wiki.nixos.org, but we still have a way to go).
+
+                    <ul>
+                        <li><a href="https://jade.fyi/blog/pinning-nixos-with-npins/">Jade's blog post</a> or basically where it all started</li>
+                        <li><a href="https://piegames.de/dumps/pinning-nixos-with-npins-revisited/">piegames blog post</a>some more modern progress that gets rid of flakes</li>
+                        <li><a href="https://discourse.nixos.org/t/pinning-nixos-with-npins/63721/21">Pinning NixOS with npins</a> One of the first links you see when googling this</li>
+                    </ul>
                 </p>
             </section>
         </main>
