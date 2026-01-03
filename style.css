@@ -104,6 +104,15 @@ footer {
     font-size: 0.9rem;
 }
 
+code {
+    font-family: 'VT323', Courier, monospace;
+    background-color: var(--button-bg);
+    padding: 2px 4px;
+    box-shadow: 
+        inset -2px -2px 0 0 var(--button-shadow-dark), 
+        inset 2px 2px 0 0 var(--button-shadow-light);
+}
+
 /* --- PIXEL ART BUTTONS --- */
 .pixel-button {
     display: inline-block;
@@ -165,7 +174,7 @@ section {
 .section-title {
     font-size: 2rem;
     color: var(--accent-color);
-    text-shadow: 2px 2px 0 var(--border-color);
+    /* text-shadow: 2px 2px 0 var(--primary-color); */
     border-bottom: 2px dashed var(--border-color);
     padding-bottom: 0.5rem;
     margin-bottom: 1rem;
